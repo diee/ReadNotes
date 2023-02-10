@@ -1,24 +1,27 @@
 import androidx.compose.material.MaterialTheme
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.material.Button
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import data.notesClient
-import io.ktor.client.call.*
-import io.ktor.client.request.*
-import kotlinx.coroutines.launch
-import ui.HomeScreen
-import ui.HomeViewModel
+import ui.*
 
 @Composable
 @Preview
 fun App() {
 
     val scope = rememberCoroutineScope()
+    var route by remember { mutableStateOf<Route>(Route.Home) }
+
     MaterialTheme {
-        HomeScreen(vm = HomeViewModel(scope))
+        when (route) {
+            Route.Home -> HomeScreen(
+                vm = HomeViewModel(scope),
+                onCreateClick = { route = Route.Detail(it) })
+
+            is Route.Detail -> NoteDetail(
+                vm = NoteDetailViewModel(scope, (route as Route.Detail).id),
+                onBackClick = { route = Route.Home })
+        }
     }
 }
 

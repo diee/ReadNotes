@@ -20,7 +20,7 @@ class HomeViewModel(private val scope: CoroutineScope) {
     private fun loadNotes() {
         scope.launch {
             state = state.copy(loading = true)
-            val notes = NotesRepository.getNotes()
+            val notes = NotesRepository.getAll()
             state = state.copy(notes = notes)
         }
     }
